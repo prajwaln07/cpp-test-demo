@@ -1,102 +1,101 @@
-#include "stringUtils.h"
+#include <iostream>
+#include <string>
+#include <vector>
 #include <algorithm>
 #include <cctype>
 #include <sstream>
 
-std::string StringUtils::reverse(const std::string& str) {
-    std::string result = str;
-    std::reverse(result.begin(), result.end());
+using namespace std;
+
+string reverseString(const string& str) {
+    string result = str;
+    reverse(result.begin(), result.end());
     return result;
 }
 
-bool StringUtils::isPalindrome(const std::string& str) {
-    if (str.empty()) {
-        return true;
-    }
-    
-    std::string cleaned;
+bool isPalindrome(const string& str) {
+    if (str.empty()) return true;
+
+    string cleaned;
     for (char c : str) {
-        if (std::isalnum(c)) {
-            cleaned += std::tolower(c);
-        }
+        if (isalnum(static_cast<unsigned char>(c)))
+            cleaned += tolower(static_cast<unsigned char>(c));
     }
-    
-    std::string reversed = cleaned;
-    std::reverse(reversed.begin(), reversed.end());
+
+    string reversed = cleaned;
+    reverse(reversed.begin(), reversed.end());
     return cleaned == reversed;
 }
 
-std::string StringUtils::toUpperCase(const std::string& str) {
-    std::string result = str;
-    std::transform(result.begin(), result.end(), result.begin(), ::toupper);
+string toUpperCase(const string& str) {
+    string result = str;
+    transform(result.begin(), result.end(), result.begin(), ::toupper);
     return result;
 }
 
-std::string StringUtils::toLowerCase(const std::string& str) {
-    std::string result = str;
-    std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+string toLowerCase(const string& str) {
+    string result = str;
+    transform(result.begin(), result.end(), result.begin(), ::tolower);
     return result;
 }
 
-int StringUtils::countVowels(const std::string& str) {
+int countVowels(const string& str) {
     int count = 0;
     for (char c : str) {
-        char lower = std::tolower(c);
-        if (lower == 'a' || lower == 'e' || lower == 'i' || 
-            lower == 'o' || lower == 'u') {
+        char lower = tolower(static_cast<unsigned char>(c));
+        if (lower == 'a' || lower == 'e' || lower == 'i' || lower == 'o' || lower == 'u')
             count++;
-        }
     }
     return count;
 }
 
-std::vector<std::string> StringUtils::split(const std::string& str, char delimiter) {
-    std::vector<std::string> tokens;
-    std::stringstream ss(str);
-    std::string token;
-    
-    while (std::getline(ss, token, delimiter)) {
-        if (!token.empty()) {
-            tokens.push_back(token);
-        }
+vector<string> split(const string& str, char delimiter) {
+    vector<string> tokens;
+    stringstream ss(str);
+    string token;
+
+    while (getline(ss, token, delimiter)) {
+        if (!token.empty()) tokens.push_back(token);
     }
-    
+
     return tokens;
 }
 
-std::string StringUtils::trim(const std::string& str) {
-    if (str.empty()) {
-        return str;
-    }
-    
+string trim(const string& str) {
+    if (str.empty()) return str;
+
     size_t start = 0;
     size_t end = str.length() - 1;
-    
-    while (start <= end && std::isspace(str[start])) {
-        start++;
-    }
-    
-    while (end >= start && std::isspace(str[end])) {
-        end--;
-    }
-    
-    if (start > end) {
-        return "";
-    }
-    
+
+    while (start <= end && isspace(static_cast<unsigned char>(str[start]))) start++;
+    while (end >= start && isspace(static_cast<unsigned char>(str[end]))) end--;
+
+    if (start > end) return "";
     return str.substr(start, end - start + 1);
 }
 
-bool StringUtils::isNumeric(const std::string& str) {
-    if (str.empty()) {
-        return false;
-    }
-    
-    for (char c : str) {
-        if (!std::isdigit(c)) {
+bool isNumeric(const string& str) {
+    if (str.empty()) return false;
+    for (char c : str)
+        if (!isdigit(static_cast<unsigned char>(c)))
             return false;
-        }
-    }
-    
     return true;
+}
+
+int main() {
+    string text = "  Madam  ";
+    cout << "Original: \"" << text << "\"\n";
+    cout << "Trimmed: \"" << trim(text) << "\"\n";
+    cout << "Reversed: " << reverseString(text) << "\n";
+    cout << "Is Palindrome: " << (isPalindrome(text) ? "Yes" : "No") << "\n";
+    cout << "Uppercase: " << toUpperCase(text) << "\n";
+    cout << "Lowercase: " << toLowerCase(text) << "\n";
+    cout << "Vowel Count: " << countVowels(text) << "\n";
+    cout << "Is Numeric: " << (isNumeric("12345") ? "Yes" : "No") << "\n";
+
+    auto words = split("C++ is fun to learn", ' ');
+    cout << "Split words:\n";
+    for (const auto& word : words) cout << "- " << word << "\n";
+
+    return 0;
 }
