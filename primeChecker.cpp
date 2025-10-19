@@ -24,7 +24,9 @@ bool isPrime(int number) {
     }
     return true;
 }
-
+bool isDivisibleBy3And5(int number) {
+    return (number % 3 == 0 && number % 5 == 0);
+}
 bool isPrimeOverLoading(int number,int xyz) {
     // Handle special cases
     if (number <= 1) return false;
@@ -32,7 +34,7 @@ bool isPrimeOverLoading(int number,int xyz) {
     if (number % 2 == 0) return false;
 
     // Check for divisibility up to square root of number
-    for (int i = 2; i * i <= number; i++) {
+    for (int i = 3; i * i <= number; i++) {
         if (number % i == 0) {
             return false;
         }
