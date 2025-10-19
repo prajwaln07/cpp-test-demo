@@ -1,6 +1,6 @@
 # C++ Test Demo
 
-A simple C++ calculator project for testing the MCP C++ Unit Test Generator.
+A simple C++ calculator project 
 
 ## Files
 - `calculator.h` - Calculator class header
