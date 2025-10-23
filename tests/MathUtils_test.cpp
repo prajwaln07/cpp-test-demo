@@ -1,243 +1,235 @@
-// AI-Generated Unit Tests for anotherRandom.cpp (MathUtils)
-// Generated: 2025-10-19
+// Comprehensive Unit Tests for MathUtils (random.cpp)
+// Generated for PR #18
 // Framework: Google Test
-// Test Coverage: add, subtract, multiply, divide, isEven, isPrime
+// Coverage: Statistical and mathematical utility functions
 
 #include <gtest/gtest.h>
+#include <vector>
 #include <stdexcept>
 
-// Include the class directly since it's not in a header
+using namespace std;
+
+// MathUtils class from random.cpp
 class MathUtils {
 public:
-    static int add(int a, int b) {
-        return a + b;
-    }
-
-    static int subtract(int a, int b) {
-        return a - b;
-    }
-
-    static int multiply(int a, int b) {
-        return a * b;
-    }
-
-    static int divide(int a, int b) {
-        if (b == 0)
-            throw std::invalid_argument("Division by zero not allowed");
-        return a / b;
-    }
-
-    static bool isEven(int n) {
-        return n % 2 == 0;
-    }
-
-    static bool isPrime(int n) {
-        if (n <= 1) return false;
-        for (int i = 2; i * i <= n; i++) {
-            if (n % i == 0) return false;
-        }
-        return true;
-    }
+    static double mean(const vector<int>& nums);
+    static double median(vector<int> nums);
+    static int mode(const vector<int>& nums);
+    static int gcd(int a, int b);
+    static int lcm(int a, int b);
+    static long long factorial(int n);
+    static bool isPrime(int n);
 };
 
-// ============================================
-// Test Suite: MathUtils
-// ============================================
-
+// Test fixture
 class MathUtilsTest : public ::testing::Test {
 protected:
-    void SetUp() override {
-        // Common setup for all tests
-    }
-    
-    void TearDown() override {
-        // Common cleanup for all tests
-    }
+    void SetUp() override {}
+    void TearDown() override {}
 };
 
-// ============================================
-// Tests for add()
-// ============================================
+// ============================================================================
+// Tests for mean()
+// ============================================================================
 
-TEST_F(MathUtilsTest, Add_PositiveNumbers) {
-    EXPECT_EQ(MathUtils::add(5, 3), 8);
-    EXPECT_EQ(MathUtils::add(10, 20), 30);
-    EXPECT_EQ(MathUtils::add(100, 200), 300);
+TEST_F(MathUtilsTest, Mean_NormalDataSet) {
+    vector<int> data = {1, 2, 3, 4, 5};
+    EXPECT_DOUBLE_EQ(MathUtils::mean(data), 3.0);
+    
+    vector<int> data2 = {10, 20, 30};
+    EXPECT_DOUBLE_EQ(MathUtils::mean(data2), 20.0);
 }
 
-TEST_F(MathUtilsTest, Add_NegativeNumbers) {
-    EXPECT_EQ(MathUtils::add(-5, -3), -8);
-    EXPECT_EQ(MathUtils::add(-10, -20), -30);
+TEST_F(MathUtilsTest, Mean_SingleElement) {
+    vector<int> data = {42};
+    EXPECT_DOUBLE_EQ(MathUtils::mean(data), 42.0);
 }
 
-TEST_F(MathUtilsTest, Add_MixedSigns) {
-    EXPECT_EQ(MathUtils::add(5, -3), 2);
-    EXPECT_EQ(MathUtils::add(-5, 3), -2);
-    EXPECT_EQ(MathUtils::add(-10, 10), 0);
+TEST_F(MathUtilsTest, Mean_NegativeNumbers) {
+    vector<int> data = {-5, -10, -15};
+    EXPECT_DOUBLE_EQ(MathUtils::mean(data), -10.0);
 }
 
-TEST_F(MathUtilsTest, Add_WithZero) {
-    EXPECT_EQ(MathUtils::add(0, 0), 0);
-    EXPECT_EQ(MathUtils::add(5, 0), 5);
-    EXPECT_EQ(MathUtils::add(0, 5), 5);
+TEST_F(MathUtilsTest, Mean_MixedPositiveNegative) {
+    vector<int> data = {-5, 0, 5, 10};
+    EXPECT_DOUBLE_EQ(MathUtils::mean(data), 2.5);
 }
 
-TEST_F(MathUtilsTest, Add_LargeNumbers) {
-    EXPECT_EQ(MathUtils::add(1000000, 2000000), 3000000);
+TEST_F(MathUtilsTest, Mean_EmptyDataSet) {
+    vector<int> data;
+    EXPECT_THROW(MathUtils::mean(data), invalid_argument);
 }
 
-// ============================================
-// Tests for subtract()
-// ============================================
-
-TEST_F(MathUtilsTest, Subtract_PositiveNumbers) {
-    EXPECT_EQ(MathUtils::subtract(10, 3), 7);
-    EXPECT_EQ(MathUtils::subtract(50, 20), 30);
-    EXPECT_EQ(MathUtils::subtract(100, 100), 0);
+TEST_F(MathUtilsTest, Mean_LargeDataSet) {
+    vector<int> data(1000, 5);
+    EXPECT_DOUBLE_EQ(MathUtils::mean(data), 5.0);
 }
 
-TEST_F(MathUtilsTest, Subtract_NegativeNumbers) {
-    EXPECT_EQ(MathUtils::subtract(-10, -3), -7);
-    EXPECT_EQ(MathUtils::subtract(-5, -10), 5);
+// ============================================================================
+// Tests for median()
+// ============================================================================
+
+TEST_F(MathUtilsTest, Median_OddElements) {
+    vector<int> data = {1, 3, 5, 7, 9};
+    EXPECT_DOUBLE_EQ(MathUtils::median(data), 5.0);
+    
+    vector<int> unsorted = {9, 1, 5, 3, 7};
+    EXPECT_DOUBLE_EQ(MathUtils::median(unsorted), 5.0);
 }
 
-TEST_F(MathUtilsTest, Subtract_MixedSigns) {
-    EXPECT_EQ(MathUtils::subtract(10, -5), 15);
-    EXPECT_EQ(MathUtils::subtract(-10, 5), -15);
+TEST_F(MathUtilsTest, Median_EvenElements) {
+    vector<int> data = {1, 2, 3, 4};
+    EXPECT_DOUBLE_EQ(MathUtils::median(data), 2.5);
+    
+    vector<int> data2 = {10, 20, 30, 40};
+    EXPECT_DOUBLE_EQ(MathUtils::median(data2), 25.0);
 }
 
-TEST_F(MathUtilsTest, Subtract_WithZero) {
-    EXPECT_EQ(MathUtils::subtract(0, 0), 0);
-    EXPECT_EQ(MathUtils::subtract(10, 0), 10);
-    EXPECT_EQ(MathUtils::subtract(0, 10), -10);
+TEST_F(MathUtilsTest, Median_SingleElement) {
+    vector<int> data = {100};
+    EXPECT_DOUBLE_EQ(MathUtils::median(data), 100.0);
 }
 
-TEST_F(MathUtilsTest, Subtract_ResultingInNegative) {
-    EXPECT_EQ(MathUtils::subtract(3, 10), -7);
+TEST_F(MathUtilsTest, Median_TwoElements) {
+    vector<int> data = {5, 15};
+    EXPECT_DOUBLE_EQ(MathUtils::median(data), 10.0);
 }
 
-// ============================================
-// Tests for multiply()
-// ============================================
-
-TEST_F(MathUtilsTest, Multiply_PositiveNumbers) {
-    EXPECT_EQ(MathUtils::multiply(5, 3), 15);
-    EXPECT_EQ(MathUtils::multiply(10, 10), 100);
-    EXPECT_EQ(MathUtils::multiply(7, 8), 56);
+TEST_F(MathUtilsTest, Median_EmptyDataSet) {
+    vector<int> data;
+    EXPECT_THROW(MathUtils::median(data), invalid_argument);
 }
 
-TEST_F(MathUtilsTest, Multiply_NegativeNumbers) {
-    EXPECT_EQ(MathUtils::multiply(-5, -3), 15);
-    EXPECT_EQ(MathUtils::multiply(-10, -10), 100);
+TEST_F(MathUtilsTest, Median_DuplicateValues) {
+    vector<int> data = {5, 5, 5, 5, 5};
+    EXPECT_DOUBLE_EQ(MathUtils::median(data), 5.0);
 }
 
-TEST_F(MathUtilsTest, Multiply_MixedSigns) {
-    EXPECT_EQ(MathUtils::multiply(5, -3), -15);
-    EXPECT_EQ(MathUtils::multiply(-5, 3), -15);
+// ============================================================================
+// Tests for mode()
+// ============================================================================
+
+TEST_F(MathUtilsTest, Mode_SingleMode) {
+    vector<int> data = {1, 2, 2, 3, 4};
+    EXPECT_EQ(MathUtils::mode(data), 2);
+    
+    vector<int> data2 = {5, 5, 5, 1, 2, 3};
+    EXPECT_EQ(MathUtils::mode(data2), 5);
 }
 
-TEST_F(MathUtilsTest, Multiply_WithZero) {
-    EXPECT_EQ(MathUtils::multiply(0, 0), 0);
-    EXPECT_EQ(MathUtils::multiply(5, 0), 0);
-    EXPECT_EQ(MathUtils::multiply(0, 5), 0);
-    EXPECT_EQ(MathUtils::multiply(-5, 0), 0);
+TEST_F(MathUtilsTest, Mode_AllSameValues) {
+    vector<int> data = {7, 7, 7, 7};
+    EXPECT_EQ(MathUtils::mode(data), 7);
 }
 
-TEST_F(MathUtilsTest, Multiply_WithOne) {
-    EXPECT_EQ(MathUtils::multiply(5, 1), 5);
-    EXPECT_EQ(MathUtils::multiply(1, 5), 5);
-    EXPECT_EQ(MathUtils::multiply(-5, 1), -5);
+TEST_F(MathUtilsTest, Mode_AllUniqueValues) {
+    vector<int> data = {1, 2, 3, 4, 5};
+    EXPECT_EQ(MathUtils::mode(data), 1);
 }
 
-TEST_F(MathUtilsTest, Multiply_LargeNumbers) {
-    EXPECT_EQ(MathUtils::multiply(1000, 1000), 1000000);
+TEST_F(MathUtilsTest, Mode_EmptyDataSet) {
+    vector<int> data;
+    EXPECT_THROW(MathUtils::mode(data), invalid_argument);
 }
 
-// ============================================
-// Tests for divide()
-// ============================================
-
-TEST_F(MathUtilsTest, Divide_PositiveNumbers) {
-    EXPECT_EQ(MathUtils::divide(10, 2), 5);
-    EXPECT_EQ(MathUtils::divide(20, 4), 5);
-    EXPECT_EQ(MathUtils::divide(100, 10), 10);
+TEST_F(MathUtilsTest, Mode_NegativeNumbers) {
+    vector<int> data = {-5, -5, -3, -2};
+    EXPECT_EQ(MathUtils::mode(data), -5);
 }
 
-TEST_F(MathUtilsTest, Divide_NegativeNumbers) {
-    EXPECT_EQ(MathUtils::divide(-10, -2), 5);
-    EXPECT_EQ(MathUtils::divide(-20, -4), 5);
+// ============================================================================
+// Tests for gcd()
+// ============================================================================
+
+TEST_F(MathUtilsTest, GCD_NormalCases) {
+    EXPECT_EQ(MathUtils::gcd(48, 18), 6);
+    EXPECT_EQ(MathUtils::gcd(100, 50), 50);
+    EXPECT_EQ(MathUtils::gcd(17, 13), 1);
 }
 
-TEST_F(MathUtilsTest, Divide_MixedSigns) {
-    EXPECT_EQ(MathUtils::divide(10, -2), -5);
-    EXPECT_EQ(MathUtils::divide(-10, 2), -5);
+TEST_F(MathUtilsTest, GCD_OneIsZero) {
+    EXPECT_EQ(MathUtils::gcd(0, 5), 5);
+    EXPECT_EQ(MathUtils::gcd(10, 0), 10);
 }
 
-TEST_F(MathUtilsTest, Divide_ResultingInZero) {
-    EXPECT_EQ(MathUtils::divide(0, 5), 0);
-    EXPECT_EQ(MathUtils::divide(0, -5), 0);
+TEST_F(MathUtilsTest, GCD_BothZero) {
+    EXPECT_THROW(MathUtils::gcd(0, 0), invalid_argument);
 }
 
-TEST_F(MathUtilsTest, Divide_IntegerDivision) {
-    // Integer division truncates
-    EXPECT_EQ(MathUtils::divide(10, 3), 3);
-    EXPECT_EQ(MathUtils::divide(7, 2), 3);
-    EXPECT_EQ(MathUtils::divide(5, 2), 2);
+TEST_F(MathUtilsTest, GCD_SameNumbers) {
+    EXPECT_EQ(MathUtils::gcd(25, 25), 25);
 }
 
-TEST_F(MathUtilsTest, Divide_ByZero_ThrowsException) {
-    EXPECT_THROW(MathUtils::divide(10, 0), std::invalid_argument);
-    EXPECT_THROW(MathUtils::divide(-10, 0), std::invalid_argument);
-    EXPECT_THROW(MathUtils::divide(0, 0), std::invalid_argument);
+TEST_F(MathUtilsTest, GCD_Coprime) {
+    EXPECT_EQ(MathUtils::gcd(7, 11), 1);
+    EXPECT_EQ(MathUtils::gcd(13, 17), 1);
 }
 
-TEST_F(MathUtilsTest, Divide_ByOne) {
-    EXPECT_EQ(MathUtils::divide(10, 1), 10);
-    EXPECT_EQ(MathUtils::divide(-10, 1), -10);
+TEST_F(MathUtilsTest, GCD_LargeNumbers) {
+    EXPECT_EQ(MathUtils::gcd(1071, 462), 21);
 }
 
-// ============================================
-// Tests for isEven()
-// ============================================
+// ============================================================================
+// Tests for lcm()
+// ============================================================================
 
-TEST_F(MathUtilsTest, IsEven_PositiveEvenNumbers) {
-    EXPECT_TRUE(MathUtils::isEven(0));
-    EXPECT_TRUE(MathUtils::isEven(2));
-    EXPECT_TRUE(MathUtils::isEven(4));
-    EXPECT_TRUE(MathUtils::isEven(10));
-    EXPECT_TRUE(MathUtils::isEven(100));
-    EXPECT_TRUE(MathUtils::isEven(1000));
+TEST_F(MathUtilsTest, LCM_NormalCases) {
+    EXPECT_EQ(MathUtils::lcm(12, 15), 60);
+    EXPECT_EQ(MathUtils::lcm(4, 6), 12);
+    EXPECT_EQ(MathUtils::lcm(21, 6), 42);
 }
 
-TEST_F(MathUtilsTest, IsEven_PositiveOddNumbers) {
-    EXPECT_FALSE(MathUtils::isEven(1));
-    EXPECT_FALSE(MathUtils::isEven(3));
-    EXPECT_FALSE(MathUtils::isEven(5));
-    EXPECT_FALSE(MathUtils::isEven(99));
-    EXPECT_FALSE(MathUtils::isEven(1001));
+TEST_F(MathUtilsTest, LCM_OneIsOne) {
+    EXPECT_EQ(MathUtils::lcm(1, 5), 5);
+    EXPECT_EQ(MathUtils::lcm(7, 1), 7);
 }
 
-TEST_F(MathUtilsTest, IsEven_NegativeEvenNumbers) {
-    EXPECT_TRUE(MathUtils::isEven(-2));
-    EXPECT_TRUE(MathUtils::isEven(-4));
-    EXPECT_TRUE(MathUtils::isEven(-10));
-    EXPECT_TRUE(MathUtils::isEven(-100));
+TEST_F(MathUtilsTest, LCM_SameNumbers) {
+    EXPECT_EQ(MathUtils::lcm(10, 10), 10);
 }
 
-TEST_F(MathUtilsTest, IsEven_NegativeOddNumbers) {
-    EXPECT_FALSE(MathUtils::isEven(-1));
-    EXPECT_FALSE(MathUtils::isEven(-3));
-    EXPECT_FALSE(MathUtils::isEven(-5));
-    EXPECT_FALSE(MathUtils::isEven(-99));
+TEST_F(MathUtilsTest, LCM_Coprime) {
+    EXPECT_EQ(MathUtils::lcm(7, 11), 77);
+    EXPECT_EQ(MathUtils::lcm(13, 17), 221);
 }
 
-TEST_F(MathUtilsTest, IsEven_Zero) {
-    EXPECT_TRUE(MathUtils::isEven(0));
+TEST_F(MathUtilsTest, LCM_WithZero) {
+    EXPECT_THROW(MathUtils::lcm(0, 5), invalid_argument);
+    EXPECT_THROW(MathUtils::lcm(10, 0), invalid_argument);
 }
 
-// ============================================
+TEST_F(MathUtilsTest, LCM_MultipleRelationship) {
+    EXPECT_EQ(MathUtils::lcm(5, 15), 15);
+    EXPECT_EQ(MathUtils::lcm(3, 12), 12);
+}
+
+// ============================================================================
+// Tests for factorial()
+// ============================================================================
+
+TEST_F(MathUtilsTest, Factorial_SmallNumbers) {
+    EXPECT_EQ(MathUtils::factorial(0), 1);
+    EXPECT_EQ(MathUtils::factorial(1), 1);
+    EXPECT_EQ(MathUtils::factorial(5), 120);
+    EXPECT_EQ(MathUtils::factorial(6), 720);
+}
+
+TEST_F(MathUtilsTest, Factorial_Ten) {
+    EXPECT_EQ(MathUtils::factorial(10), 3628800);
+}
+
+TEST_F(MathUtilsTest, Factorial_NegativeNumber) {
+    EXPECT_THROW(MathUtils::factorial(-1), invalid_argument);
+    EXPECT_THROW(MathUtils::factorial(-10), invalid_argument);
+}
+
+TEST_F(MathUtilsTest, Factorial_LargeNumber) {
+    EXPECT_EQ(MathUtils::factorial(12), 479001600);
+}
+
+// ============================================================================
 // Tests for isPrime()
-// ============================================
+// ============================================================================
 
 TEST_F(MathUtilsTest, IsPrime_SmallPrimes) {
     EXPECT_TRUE(MathUtils::isPrime(2));
@@ -248,60 +240,62 @@ TEST_F(MathUtilsTest, IsPrime_SmallPrimes) {
     EXPECT_TRUE(MathUtils::isPrime(13));
 }
 
-TEST_F(MathUtilsTest, IsPrime_LargerPrimes) {
-    EXPECT_TRUE(MathUtils::isPrime(17));
-    EXPECT_TRUE(MathUtils::isPrime(19));
-    EXPECT_TRUE(MathUtils::isPrime(23));
-    EXPECT_TRUE(MathUtils::isPrime(29));
-    EXPECT_TRUE(MathUtils::isPrime(97));
-}
-
-TEST_F(MathUtilsTest, IsPrime_CompositeNumbers) {
+TEST_F(MathUtilsTest, IsPrime_NonPrimes) {
     EXPECT_FALSE(MathUtils::isPrime(4));
     EXPECT_FALSE(MathUtils::isPrime(6));
     EXPECT_FALSE(MathUtils::isPrime(8));
     EXPECT_FALSE(MathUtils::isPrime(9));
     EXPECT_FALSE(MathUtils::isPrime(10));
-    EXPECT_FALSE(MathUtils::isPrime(15));
-    EXPECT_FALSE(MathUtils::isPrime(20));
-    EXPECT_FALSE(MathUtils::isPrime(100));
 }
 
 TEST_F(MathUtilsTest, IsPrime_EdgeCases) {
     EXPECT_FALSE(MathUtils::isPrime(0));
     EXPECT_FALSE(MathUtils::isPrime(1));
-    EXPECT_FALSE(MathUtils::isPrime(-1));
     EXPECT_FALSE(MathUtils::isPrime(-5));
 }
 
-TEST_F(MathUtilsTest, IsPrime_SquareNumbers) {
-    EXPECT_FALSE(MathUtils::isPrime(4));   // 2²
-    EXPECT_FALSE(MathUtils::isPrime(9));   // 3²
-    EXPECT_FALSE(MathUtils::isPrime(16));  // 4²
-    EXPECT_FALSE(MathUtils::isPrime(25));  // 5²
-    EXPECT_FALSE(MathUtils::isPrime(49));  // 7²
+TEST_F(MathUtilsTest, IsPrime_LargePrimes) {
+    EXPECT_TRUE(MathUtils::isPrime(97));
+    EXPECT_TRUE(MathUtils::isPrime(101));
 }
 
-// ============================================
+TEST_F(MathUtilsTest, IsPrime_LargeNonPrimes) {
+    EXPECT_FALSE(MathUtils::isPrime(100));
+    EXPECT_FALSE(MathUtils::isPrime(99));
+}
+
+// ============================================================================
 // Integration Tests
-// ============================================
+// ============================================================================
 
-TEST_F(MathUtilsTest, Integration_CombinedOperations) {
-    // (10 + 5) * 2 / 3 = 10
-    int result = MathUtils::add(10, 5);
-    result = MathUtils::multiply(result, 2);
-    result = MathUtils::divide(result, 3);
-    EXPECT_EQ(result, 10);
+TEST_F(MathUtilsTest, Integration_GCDandLCM) {
+    int a = 12, b = 18;
+    int gcd_val = MathUtils::gcd(a, b);
+    int lcm_val = MathUtils::lcm(a, b);
+    
+    EXPECT_EQ(gcd_val, 6);
+    EXPECT_EQ(lcm_val, 36);
+    EXPECT_EQ(gcd_val * lcm_val, a * b);
 }
 
-TEST_F(MathUtilsTest, Integration_CheckPrimeAndEven) {
-    // 2 is the only even prime number
-    EXPECT_TRUE(MathUtils::isPrime(2));
-    EXPECT_TRUE(MathUtils::isEven(2));
+TEST_F(MathUtilsTest, Integration_StatisticalMeasures) {
+    vector<int> data = {2, 3, 4, 3, 5, 3, 2};
     
-    // Other primes are odd
+    double mean_val = MathUtils::mean(data);
+    double median_val = MathUtils::median(data);
+    int mode_val = MathUtils::mode(data);
+    
+    EXPECT_NEAR(mean_val, 3.14, 0.1);
+    EXPECT_DOUBLE_EQ(median_val, 3.0);
+    EXPECT_EQ(mode_val, 3);
+}
+
+TEST_F(MathUtilsTest, Integration_FactorialAndPrime) {
+    EXPECT_TRUE(MathUtils::isPrime(5));
+    EXPECT_EQ(MathUtils::factorial(5), 120);
+    
     EXPECT_TRUE(MathUtils::isPrime(7));
-    EXPECT_FALSE(MathUtils::isEven(7));
+    EXPECT_EQ(MathUtils::factorial(7), 5040);
 }
 
 // Main test runner
