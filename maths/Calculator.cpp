@@ -18,10 +18,6 @@ int multiply(int a, int b) {
 
 // Division
 double divide(int a, int b) {
-    if (b == 0) {
-        cout << "Division by zero is not allowed!" << endl;
-        return 0;
-    }
     return (double)a / b;
 }
 
